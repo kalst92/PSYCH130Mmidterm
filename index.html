@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PSYCH 130M Midterm Study Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e14;
+    --surface: #16161f;
+    --surface2: #1e1e2a;
+    --border: #2a2a3a;
+    --accent: #7c6af7;
+    --accent2: #f7c26a;
+    --accent3: #6af7c2;
+    --red: #f76a7c;
+    --text: #e8e6f0;
+    --muted: #7a7890;
+    --correct: #4ade80;
+    --wrong: #f87171;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 40px;
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+
+  .exam-badge {
+    font-size: 11px;
+    background: var(--accent);
+    color: white;
+    padding: 2px 10px;
+    border-radius: 2px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    gap: 4px;
+    padding: 16px 40px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    flex-wrap: wrap;
+  }
+
+  nav button {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+    text-transform: uppercase;
+  }
+
+  nav button:hover { color: var(--text); border-color: var(--accent); }
+  nav button.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+  /* MAIN LAYOUT */
+  main { max-width: 1000px; margin: 0 auto; padding: 40px; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* MODULE SELECTOR */
+  .module-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .module-tab {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .module-tab:hover { color: var(--accent2); border-color: var(--accent2); }
+  .module-tab.active { background: var(--accent2); color: var(--bg); border-color: var(--accent2); }
+
+  /* SECTION HEADERS */
+  .section-header {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+
+  .section-sub {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 32px;
+    font-style: italic;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+    margin-bottom: 12px;
+  }
+
+  /* ==================== FLASHCARDS ==================== */
+  #flashcard-area {
+    text-align: center;
+  }
+
+  .flashcard-container {
+    perspective: 1200px;
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto 24px;
+    height: 260px;
+  }
+
+  .flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+    cursor: pointer;
+  }
+
+  .flashcard-inner.flipped { transform: rotateY(180deg); }
+
+  .flashcard-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+  }
+
+  .flashcard-face.back {
+    transform: rotateY(180deg);
+    background: var(--surface2);
+    border-color: var(--accent);
+  }
+
+  .flashcard-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  .flashcard-face.back .flashcard-label { color: var(--accent); }
+
+  .flashcard-term {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+
+  .flashcard-def {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+    max-width: 500px;
+    text-align: center;
+  }
+
+  .flashcard-hint {
+    font-size: 11px;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 10px;
+  }
+
+  .fc-controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
+  .btn.primary:hover { background: #6a58e0; }
+  .btn.success { background: var(--correct); border-color: var(--correct); color: var(--bg); }
+  .btn.danger { background: var(--wrong); border-color: var(--wrong); color: white; }
+
+  .fc-counter {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .progress-bar {
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto 24px;
+    height: 3px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+
+  /* SCORE PILLS */
+  .score-row {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .score-pill {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 2px;
+    font-weight: 600;
+  }
+
+  .score-pill.got { background: rgba(74, 222, 128, 0.1); color: var(--correct); border: 1px solid rgba(74, 222, 128, 0.3); }
+  .score-pill.missed { background: rgba(248, 113, 113, 0.1); color: var(--wrong); border: 1px solid rgba(248, 113, 113, 0.3); }
+  .score-pill.remain { background: rgba(124, 106, 247, 0.1); color: var(--accent); border: 1px solid rgba(124, 106, 247, 0.3); }
+
+  /* ==================== MULTIPLE CHOICE ==================== */
+  .mc-question {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .mc-question.answered-correct { border-color: rgba(74, 222, 128, 0.4); }
+  .mc-question.answered-wrong { border-color: rgba(248, 113, 113, 0.4); }
+
+  .q-number {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .q-text {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .mc-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mc-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .mc-option:hover:not(.disabled) { border-color: var(--accent); background: rgba(124, 106, 247, 0.05); }
+
+  .mc-option.correct { border-color: var(--correct); background: rgba(74, 222, 128, 0.07); color: var(--correct); }
+  .mc-option.wrong { border-color: var(--wrong); background: rgba(248, 113, 113, 0.07); color: var(--wrong); }
+  .mc-option.disabled { cursor: default; }
+
+  .option-letter {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    min-width: 18px;
+    color: var(--muted);
+  }
+
+  .mc-option.correct .option-letter { color: var(--correct); }
+  .mc-option.wrong .option-letter { color: var(--wrong); }
+
+  .mc-feedback {
+    margin-top: 12px;
+    padding: 12px 16px;
+    border-radius: 3px;
+    font-size: 12px;
+    line-height: 1.6;
+    display: none;
+  }
+
+  .mc-feedback.show { display: block; }
+  .mc-feedback.correct { background: rgba(74, 222, 128, 0.08); border: 1px solid rgba(74, 222, 128, 0.2); color: var(--correct); }
+  .mc-feedback.wrong { background: rgba(248, 113, 113, 0.08); border: 1px solid rgba(248, 113, 113, 0.2); color: var(--wrong); }
+
+  .mc-score-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .mc-score-label { font-size: 12px; color: var(--muted); }
+  .mc-score-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--accent2);
+  }
+
+  /* ==================== SHORT ANSWER ==================== */
+  .sa-question {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .sa-prompt {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    border-left: 3px solid var(--accent3);
+    padding-left: 16px;
+  }
+
+  .sa-textarea {
+    width: 100%;
+    min-height: 120px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 14px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    resize: vertical;
+    transition: border-color 0.15s;
+  }
+
+  .sa-textarea:focus { outline: none; border-color: var(--accent3); }
+
+  .sa-reveal {
+    margin-top: 12px;
+    padding: 16px;
+    background: rgba(106, 247, 194, 0.05);
+    border: 1px solid rgba(106, 247, 194, 0.2);
+    border-radius: 3px;
+    font-size: 13px;
+    line-height: 1.7;
+    display: none;
+  }
+
+  .sa-reveal.show { display: block; }
+  .sa-reveal strong { color: var(--accent3); display: block; margin-bottom: 8px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+
+  .sa-reveal ul { padding-left: 20px; }
+  .sa-reveal li { margin-bottom: 4px; }
+
+  /* ==================== ESSAY ==================== */
+  .essay-section { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 28px; margin-bottom: 20px; }
+
+  .essay-prompt-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .essay-prompt {
+    font-size: 16px;
+    line-height: 1.6;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .essay-tips { margin-bottom: 20px; }
+  .essay-tips h4 { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--accent2); margin-bottom: 10px; }
+  .essay-tips li { font-size: 13px; line-height: 1.6; color: var(--muted); margin-bottom: 4px; padding-left: 12px; }
+
+  .essay-textarea {
+    width: 100%;
+    min-height: 200px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 16px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    resize: vertical;
+    transition: border-color 0.15s;
+  }
+
+  .essay-textarea:focus { outline: none; border-color: var(--red); }
+
+  .word-count { font-size: 11px; color: var(--muted); margin-top: 6px; text-align: right; }
+
+  .rubric {
+    margin-top: 16px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    display: none;
+  }
+
+  .rubric.show { display: block; }
+
+  .rubric-header {
+    background: var(--surface2);
+    padding: 10px 16px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    font-weight: 600;
+  }
+
+  .rubric-item {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 1.5;
+    display: flex;
+    gap: 12px;
+  }
+
+  .rubric-item:nth-child(even) { background: rgba(255,255,255,0.02); }
+  .rubric-pts { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--accent2); min-width: 30px; }
+
+  /* ==================== MATCHING ==================== */
+  .matching-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 600px) { .matching-grid { grid-template-columns: 1fr; } }
+
+  .matching-col h4 {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .match-item {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1.4;
+    user-select: none;
+  }
+
+  .match-item:hover { border-color: var(--accent); }
+  .match-item.selected { border-color: var(--accent2); background: rgba(247, 194, 106, 0.08); color: var(--accent2); }
+  .match-item.matched { border-color: var(--correct); background: rgba(74, 222, 128, 0.08); color: var(--correct); cursor: default; }
+  .match-item.wrong-match { border-color: var(--wrong); background: rgba(248, 113, 113, 0.08); color: var(--wrong); }
+
+  .match-number { display: inline-block; min-width: 20px; font-weight: 700; color: var(--accent2); }
+
+  /* KEY TERMS GRID */
+  .terms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+  }
+
+  .term-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+
+  .term-card:hover { border-color: var(--accent); }
+  .term-card.expanded { border-color: var(--accent); }
+
+  .term-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: var(--accent2);
+  }
+
+  .term-module {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .term-def {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted);
+    display: none;
+  }
+
+  .term-card.expanded .term-def { display: block; color: var(--text); }
+
+  /* UTILITY */
+  .flex-gap { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 24px; }
+
+  .tag {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+
+  .tag.warn { background: rgba(247,194,106,0.15); color: var(--accent2); border: 1px solid rgba(247,194,106,0.3); }
+  .tag.info { background: rgba(124,106,247,0.15); color: var(--accent); border: 1px solid rgba(124,106,247,0.3); }
+  .tag.good { background: rgba(74,222,128,0.15); color: var(--correct); border: 1px solid rgba(74,222,128,0.3); }
+
+  hr.divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  .module-group { margin-bottom: 40px; }
+  .module-group h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--accent2);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .module-group h3::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* hidden module filter */
+  [data-mod] { display: none; }
+  [data-mod].show-item { display: block; }
+  [data-mod].show-item.mc-question { display: block; }
+
+  .fc-item[data-mod] { display: none; }
+  .fc-item[data-mod].active-card { display: flex; }
+
+  /* grid items hidden by default */
+  .term-card[data-mod] { display: none; }
+  .term-card[data-mod].show-item { display: block; }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>PSYCH 130M</h1>
+  <span class="exam-badge">Midterm Study Guide</span>
+  <span style="color:var(--muted);font-size:12px;margin-left:auto;">Wed 6/10 · Morgan Hall 101 · 3–4pm</span>
+</header>
+
+<nav>
+  <button class="active" onclick="showSection('flashcards')">Flashcards</button>
+  <button onclick="showSection('mc')">Multiple Choice</button>
+  <button onclick="showSection('matching')">Matching</button>
+  <button onclick="showSection('sa')">Short Answer</button>
+  <button onclick="showSection('essay')">Essay Practice</button>
+  <button onclick="showSection('terms')">Key Terms</button>
+</nav>
+
+<main>
+
+<!-- ===================== FLASHCARDS ===================== -->
+<section id="flashcards" class="section active">
+  <div class="section-header">Flashcards</div>
+  <p class="section-sub">Click to flip · Mark got it / missed it · Shuffle to randomize</p>
+
+  <div class="flex-gap">
+    <div class="module-tabs">
+      <button class="module-tab active" onclick="filterCards('all')">All</button>
+      <button class="module-tab" onclick="filterCards('1')">Mod 1</button>
+      <button class="module-tab" onclick="filterCards('23')">Mod 2/3</button>
+      <button class="module-tab" onclick="filterCards('45')">Mod 4/5</button>
+      <button class="module-tab" onclick="filterCards('6')">Mod 6</button>
+    </div>
+  </div>
+
+  <div class="score-row">
+    <div class="score-pill got" id="fc-got">✓ Got it: 0</div>
+    <div class="score-pill missed" id="fc-missed">✗ Missed: 0</div>
+    <div class="score-pill remain" id="fc-remain">◈ Remaining: 0</div>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="fc-progress"></div></div>
+
+  <div id="flashcard-area">
+    <div class="flashcard-container">
+      <div class="flashcard-inner" id="fc-inner" onclick="flipCard()">
+        <div class="flashcard-face front">
+          <div class="flashcard-label">Term</div>
+          <div class="flashcard-term" id="fc-term">—</div>
+          <div class="flashcard-hint">click to reveal</div>
+        </div>
+        <div class="flashcard-face back">
+          <div class="flashcard-label">Definition</div>
+          <div class="flashcard-def" id="fc-def">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fc-counter" id="fc-counter">Card 1 of 1</div>
+
+    <div class="fc-controls">
+      <button class="btn" onclick="prevCard()">← Prev</button>
+      <button class="btn danger" onclick="markCard('missed')">✗ Missed</button>
+      <button class="btn success" onclick="markCard('got')">✓ Got It</button>
+      <button class="btn" onclick="nextCard()">Next →</button>
+    </div>
+    <div class="fc-controls">
+      <button class="btn primary" onclick="shuffleCards()">Shuffle</button>
+      <button class="btn" onclick="resetCards()">Reset</button>
+      <button class="btn" onclick="reviewMissed()">Review Missed</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MULTIPLE CHOICE ===================== -->
+<section id="mc" class="section">
+  <div class="section-header">Multiple Choice</div>
+  <p class="section-sub">Exam format: 8–10 questions (~15 min). Click an answer to check.</p>
+
+  <div class="flex-gap">
+    <div class="module-tabs">
+      <button class="module-tab active" onclick="filterMC('all')">All</button>
+      <button class="module-tab" onclick="filterMC('1')">Mod 1</button>
+      <button class="module-tab" onclick="filterMC('23')">Mod 2/3</button>
+      <button class="module-tab" onclick="filterMC('45')">Mod 4/5</button>
+      <button class="module-tab" onclick="filterMC('6')">Mod 6</button>
+    </div>
+  </div>
+
+  <div class="mc-score-bar">
+    <div>
+      <div class="mc-score-label">Score</div>
+      <div class="mc-score-val" id="mc-score">0 / 0</div>
+    </div>
+    <button class="btn" onclick="resetMC()">Reset All</button>
+  </div>
+
+  <div id="mc-container"></div>
+</section>
+
+<!-- ===================== MATCHING ===================== -->
+<section id="matching" class="section">
+  <div class="section-header">Matching</div>
+  <p class="section-sub">Exam format: included in 8–10 MC/matching block. Match each term to its definition.</p>
+
+  <div class="flex-gap">
+    <div class="module-tabs">
+      <button class="module-tab active" onclick="loadMatchSet(0)">Set 1: DP Principles</button>
+      <button class="module-tab" onclick="loadMatchSet(1)">Set 2: Assessment</button>
+      <button class="module-tab" onclick="loadMatchSet(2)">Set 3: Genetics</button>
+      <button class="module-tab" onclick="loadMatchSet(3)">Set 4: ADHD</button>
+    </div>
+  </div>
+
+  <div id="match-score-bar" class="mc-score-bar">
+    <div><div class="mc-score-label">Matched</div><div class="mc-score-val" id="match-score">0 / 0</div></div>
+    <button class="btn" onclick="resetMatch()">Reset</button>
+  </div>
+
+  <div class="matching-grid">
+    <div class="matching-col">
+      <h4>Terms</h4>
+      <div id="match-terms"></div>
+    </div>
+    <div class="matching-col">
+      <h4>Definitions</h4>
+      <div id="match-defs"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SHORT ANSWER ===================== -->
+<section id="sa" class="section">
+  <div class="section-header">Short Answer</div>
+  <p class="section-sub">Exam format: 1–2 short answer questions (~15 min). Write your answer, then reveal key points.</p>
+
+  <div class="flex-gap">
+    <div class="module-tabs">
+      <button class="module-tab active" onclick="filterSA('all')">All</button>
+      <button class="module-tab" onclick="filterSA('1')">Mod 1</button>
+      <button class="module-tab" onclick="filterSA('23')">Mod 2/3</button>
+      <button class="module-tab" onclick="filterSA('45')">Mod 4/5</button>
+      <button class="module-tab" onclick="filterSA('6')">Mod 6</button>
+    </div>
+  </div>
+
+  <div id="sa-container"></div>
+</section>
+
+<!-- ===================== ESSAY ===================== -->
+<section id="essay" class="section">
+  <div class="section-header">Essay Practice</div>
+  <p class="section-sub">Exam format: 1 essay (~30 min). Practice with these likely prompts, then check the rubric.</p>
+
+  <div id="essay-container"></div>
+</section>
+
+<!-- ===================== KEY TERMS ===================== -->
+<section id="terms" class="section">
+  <div class="section-header">Key Terms</div>
+  <p class="section-sub">All terms from the study guide. Click any card to see the definition.</p>
+
+  <div class="flex-gap">
+    <div class="module-tabs">
+      <button class="module-tab active" onclick="filterTerms('all')">All</button>
+      <button class="module-tab" onclick="filterTerms('1')">Mod 1</button>
+      <button class="module-tab" onclick="filterTerms('23')">Mod 2/3</button>
+      <button class="module-tab" onclick="filterTerms('45')">Mod 4/5</button>
+      <button class="module-tab" onclick="filterTerms('6')">Mod 6</button>
+    </div>
+  </div>
+
+  <div class="terms-grid" id="terms-grid"></div>
+</section>
+
+</main>
+
+<script>
+// ===================== DATA =====================
+
+const flashcards = [
+  // MODULE 1
+  { mod:'1', term:'Risk Factor', def:'An individual, family, or social characteristic that precedes AND predicts a maladaptive outcome. Does not necessarily cause a disorder — correlation ≠ causation. To prove causality, changing the risk factor must yield changes in the outcome.' },
+  { mod:'1', term:'Promotive / Asset Factor', def:'A factor that precedes and predicts adaptive outcomes. May compensate for adverse effects of risk factors. Can exist on the same continuum as risk factors (e.g., parental warmth is an asset; parental rejection is a risk).' },
+  { mod:'1', term:'Resilience', def:'Good developmental outcomes despite serious threats to adaptation or development. Requires TWO criteria: (1) exposure to threat/adversity/risk factors AND (2) the individual exhibits good or adequate adaptation.' },
+  { mod:'1', term:'Psychopathology', def:'The study of the nature and causes of mental disorders.' },
+  { mod:'1', term:'Mental Disorder', def:'A clinically significant behavioral or psychological syndrome associated with distress, disability, or significantly increased risk of suffering — defined by DSM. Also requires "dysfunction" (breakdown in a mechanism) and "harm" (social value component per Wakefield).' },
+  { mod:'1', term:'Equifinality', def:'Different early experiences or risk factors lead to the SAME outcome. Example: different paths (abuse, neglect, poverty) all leading to conduct disorder.' },
+  { mod:'1', term:'Multifinality', def:'Similar early experiences or risk factors lead to DIFFERENT outcomes. Example: childhood maltreatment leading to depression in one child, PTSD in another, and no disorder in a third.' },
+  { mod:'1', term:'Developmental Pathway', def:'The sequence and timing of particular behaviors and possible relationships between behaviors over time. Used to understand "why" and "how" — often studied through mediation models.' },
+  { mod:'1', term:'Mediator', def:'A variable that explains the process of "why" and "how" a risk factor causes an outcome. Mediators establish causality. Example: coercive parenting → low self-esteem (mediator) → adolescent delinquency.' },
+  { mod:'1', term:'Principle 1: Typical & Atypical Development', def:'Typical and atypical development are mutually informative. The DP approach studies both groups together using rigorous measures, uses healthy controls as a reference, and involves cross-disciplinary collaboration.' },
+  { mod:'1', term:'Principle 2: Multiple Levels of Analysis', def:'Normal and atypical development must be studied at multiple levels — molecular, biological, psychological, behavioral, and contextual (Bronfenbrenner\'s bio-ecological model). Context is also multi-level.' },
+  { mod:'1', term:'Principle 3: Risk & Resilience', def:'It is important to identify risk, asset, resilience, protective, and vulnerability factors in the development of psychopathology.' },
+  { mod:'1', term:'Principle 4: Developmental Pathways', def:'To fully understand psychopathology, the developmental pathways must be articulated — including mediators and moderators that explain processes.' },
+  { mod:'1', term:'Bronfenbrenner Bio-Ecological Model', def:'Context is multi-level: microsystem, mesosystem, exosystem, macrosystem. All levels influence child development and psychopathology.' },
+  // MODULE 2/3
+  { mod:'23', term:'Evidence-Based Assessment (EBA)', def:'Assessment methods and processes based on empirical evidence in terms of both reliability and validity as well as their clinical usefulness for prescribed populations and purposes.' },
+  { mod:'23', term:'Informant Discrepancy', def:'Common disagreement between multiple informants (e.g., parent vs. teacher vs. child) about youth mental health. Not fully explained by measurement reliability/validity — reflects real differences across contexts and reporters.' },
+  { mod:'23', term:'Test Reliability', def:'The consistency of test scores within participants across time, items tapping the same construct, context, or multiple assessors/raters. Types: test-retest, inter-rater, internal consistency.' },
+  { mod:'23', term:'Test Validity', def:'How thoroughly and accurately an instrument measures a specific theoretical construct, and how useful it is in predicting important outcomes. A test can be reliable but not valid.' },
+  { mod:'23', term:'Comorbidity', def:'The simultaneous presence of two or more disorders/conditions in one individual. Very common in child psychopathology — e.g., ADHD often co-occurs with ODD, anxiety, and learning disorders.' },
+  { mod:'23', term:'Categorical Classification (DSM-5)', def:'Disorders defined by yes/no category membership based on meeting threshold criteria. Criticized for: categorical vs. dimensional issues, over-specification, heterogeneity within classes, failure to consider development/culture.' },
+  { mod:'23', term:'Dimensional Classification', def:'Systems like RDoC or HiTOP that treat mental health along continuous dimensions rather than discrete categories. Better captures gradations of severity.' },
+  { mod:'23', term:'4 Purposes of Assessment', def:'1) Diagnosis — identify the nature of the problem. 2) Prognosis — predict future behavior. 3) Case conceptualization & treatment planning. 4) Treatment monitoring & outcome evaluation.' },
+  { mod:'23', term:'Structured Interview', def:'Clinician follows standardized protocol with uniform questions; responses rated and scored. Enhanced reliability. Used to measure DSM criteria.' },
+  { mod:'23', term:'Unstructured Interview', def:'Open-ended questions, no specific format. More conversational; allows rapport-building. Less reliable than structured.' },
+  { mod:'23', term:'Semi-Structured Interview', def:'Combination of structured and unstructured. Reliable means of diagnosis while allowing rapport. Best of both approaches.' },
+  { mod:'23', term:'Wakefield Harmful Dysfunction', def:'Mental disorder requires: (1) Dysfunction — breakdown in a mechanism interfering with natural function, AND (2) Harm — social value component causing functional impairment; may be culturally/context-dependent.' },
+  { mod:'23', term:'Why Multiple Informants?', def:'Different reporters observe behaviors in different contexts; children\'s self-reports may have limited reliability; reporter biases exist. No single informant has complete information.' },
+  { mod:'23', term:'Why Multiple Contexts?', def:'Children\'s behaviors/symptoms vary by interpersonal context; context provides clues about prevalence and severity; clinical significance of behaviors varies by developmental expectability.' },
+  // MODULE 4/5
+  { mod:'45', term:'Genotype', def:'The structural composition of the specific gene(s) within an individual. The underlying genetic blueprint, not directly observable.' },
+  { mod:'45', term:'Phenotype', def:'The observable expression of the genotype, including body characteristics and behavior. What we can measure and see.' },
+  { mod:'45', term:'Endophenotype', def:'Biological and behavioral manifestations ("markers") of genetic vulnerability that require careful measurement to be detected. Sits between genotype and phenotype — helps trace the pathway from gene to disorder.' },
+  { mod:'45', term:'Alleles', def:'Two or more forms of a gene for a specific trait. Example: the "long" and "short" alleles of the serotonin transporter (5-HTT) gene.' },
+  { mod:'45', term:'Polymorphism', def:'The presence of two or more variant forms of a specific DNA sequence that can occur among different individuals or populations.' },
+  { mod:'45', term:'Heritability Estimate (h²)', def:'A statistical estimate of the proportion of variance in a behavioral trait explained by genetic differences in a given population. Formula: h² = 2(rMZ – rDZ). Applies to populations, not individuals. ADHD: 70–80%, Autism: >80%, Depression: 35–75%, Dyslexia: 60%.' },
+  { mod:'45', term:'Gene-Environment Correlation (rGE)', def:'The correlation between a child\'s genotype and their environment. Example: children genetically predisposed to aggression may evoke harsher parenting, which then further predicts aggression.' },
+  { mod:'45', term:'Gene × Environment Interaction (GxE)', def:'Genotype MODERATES the effect of an environmental risk factor on a disorder. The same environment has different effects depending on genotype. Example: the 5-HTTLPR gene moderating the association between maternal unresponsiveness and child externalizing problems.' },
+  { mod:'45', term:'Authoritative Parenting', def:'High support + high demandingness. Relationship is reciprocal and responsive; high bidirectional communication. Associated with best child outcomes (lower externalizing/internalizing, better academic achievement).' },
+  { mod:'45', term:'Authoritarian Parenting', def:'Low support + high demandingness. Controlling, power-assertive; high unidirectional communication. Associated with higher externalizing and internalizing problems, lower academic achievement.' },
+  { mod:'45', term:'Permissive Parenting', def:'High support + low demandingness. Indulgent; low in control attempts. Associated with somewhat higher externalizing but not internalizing problems.' },
+  { mod:'45', term:'Disengaged / Neglectful Parenting', def:'Low support + low demandingness. Rejecting or neglecting; uninvolved. Worst outcomes — associated with highest externalizing and internalizing, lowest academic achievement.' },
+  { mod:'45', term:'Emotion-Related Parenting Practices (ERPPs)', def:'Parenting behaviors that shape a child\'s experience, expression, and regulation of emotions. Three main types: (1) parents\' own emotion expressions, (2) parent-child discussion of emotions, (3) parental reactions to children\'s emotions.' },
+  { mod:'45', term:'Supportive Parental Reactions', def:'Emotion-focused reactions (comforting, soothing, validating, calming) and problem-focused reactions (helping identify/solve problem) → better socioemotional outcomes.' },
+  { mod:'45', term:'Unsupportive Parental Reactions', def:'Minimizing ("it\'s not a big deal"), punitive (threats for emotional expression), and distress reactions (getting angry/embarrassed) → worse socioemotional outcomes.' },
+  { mod:'45', term:'Behavioral Genetics', def:'Research designs (family studies, twin studies, adoption studies) that examine how variation in behaviors/traits results from heritable + environmental factors. Estimates heritability but cannot identify specific genes.' },
+  { mod:'45', term:'Molecular Genetics', def:'Focuses on identifying specific gene polymorphisms that underlie phenotype variations. Collects DNA data. Can identify candidate genes and conduct GWAS.' },
+  // MODULE 6
+  { mod:'6', term:'ADHD — Two Core Symptom Domains', def:'(1) Inattention-Disorganization: difficulty sustaining attention, easily distracted, loses things, forgetful. (2) Hyperactivity-Impulsivity: fidgeting, leaving seat, running/climbing, talking excessively, blurting out, can\'t wait turn.' },
+  { mod:'6', term:'Two Key Principles for ADHD Symptoms', def:'(1) Symptoms must be age-inappropriate (deviate from developmental norm) — not just inconvenient. (2) Symptoms must cause impairment in multiple settings (cross-situational).' },
+  { mod:'6', term:'Executive Functioning', def:'Strategic or deliberate allocation of attention and response. Includes: working memory, response suppression (inhibition), and cognitive flexibility (set shifting). Supported by dorsolateral prefrontal cortex and fronto-striatal circuits.' },
+  { mod:'6', term:'Working Memory', def:'A limited capacity system for keeping something in mind while doing something else. Verbal WM (left-lateralized phonological loop) and spatial WM (right-lateralized). Spatial WM deficits are larger in ADHD (d≈1.0).' },
+  { mod:'6', term:'Response Suppression', def:'The ability to interrupt a response during moment-to-moment behavior. Linked to impulsivity and inattention. Right-lateralized neural circuit. Stop-signal task effect size d≈0.60 in ADHD.' },
+  { mod:'6', term:'Cognitive Flexibility (Set Shifting)', def:'Shifting mental focus within a task (e.g., sorting by color vs. number) or switching between tasks. Involves parietal cortex. Smaller ADHD effect (d≈0.46) relative to WM or inhibition.' },
+  { mod:'6', term:'ADHD Evidence-Based Assessment Guidelines', def:'Multi-informant approach (parent + teacher standardized ratings); careful developmental history; distinguish from normal variation and other disorders; direct observation when possible; assess impairment across multiple domains.' },
+  { mod:'6', term:'ADHD Genetic Risk', def:'Highly heritable (h²≈0.70–0.80 from twin studies). Family studies show 2–4× increased risk in first-degree relatives. No single gene "for" ADHD — polygenic; six candidate genes identified (DAT1, DRD4, DRD5, 5HTTPLR, HTR1B, SNAP25) accounting for only ~1% of variance.' },
+  { mod:'6', term:'ADHD Prenatal/Perinatal Risk Factors', def:'Low birth weight (<2500g); prenatal alcohol exposure; prenatal pesticide exposure; lead exposure (even at background levels); maternal smoking during pregnancy (though causal evidence is mixed); prematurity.' },
+  { mod:'6', term:'Vigilance / Sustained Attention', def:'Maintaining an alert state over time. A right-lateralized network (noradrenergic system, locus coeruleus, right PFC). Children with ADHD show poor signal detection on continuous performance tasks and excess reaction time variability.' },
+  { mod:'6', term:'ADHD Comorbidity Rates', def:'~50% co-occur with ODD, ~22% with Conduct Disorder, ~10–15% with any anxiety disorder, ~25% with a learning disorder. Over 2/3 of children with ADHD have at least one additional diagnosis.' },
+  { mod:'6', term:'ADHD in the Classroom', def:'Behavioral manifestations: difficulty staying seated, blurting out answers, not finishing tasks, losing materials, forgetting assignments, talking when should be quiet, not following multi-step instructions.' },
+];
+
+const mcData = [
+  // MOD 1
+  { mod:'1', q:'Which of the following BEST describes how the developmental psychopathology (DP) approach differs from prior approaches to studying children with mental illness?', opts:['A) DP focuses exclusively on children with diagnosed disorders','B) DP uses only clinical interviews and naturalistic observations','C) DP studies atypical and typically developing children together using rigorous, validated methods','D) DP separates clinical psychology and academic psychology into distinct fields'], ans:'C', fb:'The DP approach integrates both groups in the same study, uses rigorous and validated measures, includes healthy controls as a reference group, and involves cross-disciplinary collaboration (slide 12, Mod 1).' },
+  { mod:'1', q:'A researcher finds that children raised in poverty have higher rates of depression. She concludes that poverty causes depression. Which limitation does this conclusion overlook?', opts:['A) Poverty cannot be measured reliably','B) Correlation does not equal causation — poverty may be a risk factor but not a proven causal one','C) Depression is too rare in children to study','D) Risk factors must precede outcomes, and poverty always precedes depression'], ans:'B', fb:'Risk factors predict outcomes but do not necessarily cause them. To prove causality, changing the risk factor must yield changes in outcomes — best demonstrated through experimental trials (slides 19-20, Mod 1).' },
+  { mod:'1', q:'A child grows up in a high-conflict home (a risk factor) but develops strong peer relationships and performs well academically. This child is BEST described as displaying:', opts:['A) Equifinality','B) Multifinality','C) Resilience','D) A promotive factor'], ans:'C', fb:'Resilience requires TWO criteria: (1) exposure to threat/adversity AND (2) good or adequate developmental outcomes despite that exposure (slide 23, Mod 1).' },
+  { mod:'1', q:'Equifinality refers to:', opts:['A) Similar risk factors leading to different outcomes','B) Different risk factors leading to the same outcome','C) Risk and promotive factors existing on the same continuum','D) The mediating role of contextual factors'], ans:'B', fb:'Equifinality = different early experiences → same outcome. Multifinality = similar early experiences → different outcomes. (slide 7, Mod 4/5)' },
+  { mod:'1', q:'A researcher examines how neighborhood disadvantage increases children\'s cortisol levels, which then predicts internalizing symptoms. The cortisol level is functioning as a:', opts:['A) Risk factor','B) Mediator','C) Moderator','D) Promotive factor'], ans:'B', fb:'A mediator explains the process of "why" and "how" a risk factor causes an outcome — it establishes the causal mechanism. (slides 27–28, Mod 1)' },
+  // MOD 2/3
+  { mod:'23', q:'Which of the following is an example of POOR test validity?', opts:['A) A depression scale given twice in one week yields different scores','B) Two raters observe the same behavior and score it differently','C) A verbal task meant to measure emotion regulation actually correlates more strongly with language ability than with emotion outcomes','D) A child scores differently on two equivalent forms of an IQ test'], ans:'C', fb:'Validity = measuring what you intend to measure. If the task actually measures language ability rather than emotion regulation, the measure lacks construct validity. Options A, B, and D are examples of poor reliability. (slide 25, Mod 2/3)' },
+  { mod:'23', q:'Why is it important to use multiple informants in child mental health assessment?', opts:['A) Parent reports are always more accurate than teacher reports','B) Different reporters observe children in different contexts and reporter biases exist — no single informant is complete','C) Multiple informants reduce the need for direct observation','D) Children\'s self-reports are always invalid before age 12'], ans:'B', fb:'Different reporters observe children in different contexts; there may be reporter biases; children\'s self-reports have limited reliability/validity depending on age and construct. Multi-informant approaches produce a more complete picture. (slides 12-14, Mod 2/3)' },
+  { mod:'23', q:'According to Wakefield\'s harmful dysfunction model, a mental disorder requires:', opts:['A) A genetic cause and impaired social functioning','B) Both dysfunction (mechanism breakdown) and harm (impairment with social value component)','C) DSM-5 criteria and at least two symptoms','D) Cultural universality and biological basis'], ans:'B', fb:'Wakefield: "Harm" = social value component causing functional impairment (may be culturally dependent). "Dysfunction" = breakdown in a mechanism that interferes with natural function. Both are required. (slides 29, Mod 2/3)' },
+  { mod:'23', q:'Informant discrepancies in youth mental health assessments are:', opts:['A) Rare and usually indicate measurement error','B) Common and fully explained by poor test reliability','C) Common and not fully explained by measurement issues — they reflect real contextual differences','D) Best resolved by relying exclusively on parent report'], ans:'C', fb:'De Los Reyes et al. (2023): informant discrepancies are common, are not fully explained by reliability/validity issues, and analyzing them contributes to better understanding of youth mental health domains. (slides 14, Mod 2/3)' },
+  { mod:'23', q:'A clinician uses a standardized interview with fixed questions and scoring to assess ADHD criteria. This is an example of a:', opts:['A) Unstructured interview','B) Collateral interview','C) Structured interview','D) Semi-structured interview'], ans:'C', fb:'Structured interviews use a standardized protocol with uniform questions and scoring, designed to measure specific DSM criteria. They enhance reliability compared to unstructured formats. (slide 9, Mod 2/3)' },
+  // MOD 4/5
+  { mod:'45', q:'The heritability estimate for dyslexia in children is approximately h² = .60. This means:', opts:['A) 60% of children with this genotype will develop dyslexia','B) Dyslexia is 60% caused by genetics and 40% by environment','C) 60% of the variance in dyslexia in this population can be attributed to genetic differences','D) A person with this gene has a 60% chance of developing dyslexia'], ans:'C', fb:'h² is a population-level statistic: the proportion of variance in a trait attributable to genetic differences in a given population. It does NOT apply to individuals and does NOT mean 60% genetic + 40% environment. (slide 16, Mod 4/5)' },
+  { mod:'45', q:'Children with a genotype for aggression whose parents also use harsh discipline — where the gene predicts both the behavior AND the parenting environment — is an example of:', opts:['A) Gene × Environment interaction','B) Equifinality','C) Gene-Environment correlation (rGE)','D) Phenotypic plasticity'], ans:'C', fb:'rGE = the correlation between a child\'s genotype and their environment. If genotype predicts the environment the child is exposed to, that is gene-environment correlation, not interaction. GxE = the ENVIRONMENT moderates the effect of genes. (slides 20-22, Mod 4/5)' },
+  { mod:'45', q:'According to Baumrind\'s typology, authoritative parenting is characterized by:', opts:['A) High support and low demandingness','B) Low support and high demandingness','C) High support and high demandingness','D) Low support and low demandingness'], ans:'C', fb:'Authoritative = high supportiveness (accepting, child-centered) + high demandingness (high expectations). Reciprocal, responsive relationships with bidirectional communication. Best child outcomes across studies. (slide 28, Mod 4/5)' },
+  { mod:'45', q:'Emotional-focused reactions to children\'s negative emotions (e.g., comforting, validating) are associated with:', opts:['A) Worse emotion regulation outcomes — children become more dysregulated','B) Better socioemotional outcomes for children','C) No significant effect on children\'s emotional development','D) Better outcomes only when combined with punitive strategies'], ans:'B', fb:'Emotion-focused and problem-focused reactions correlate with better emotional development outcomes. Minimizing, punitive, and distress reactions are associated with worse outcomes. (slides 32-33, Mod 4/5)' },
+  // MOD 6
+  { mod:'6', q:'A child in 3rd grade frequently loses pencils, forgets to turn in homework, needs multiple reminders to start tasks, and often seems to be "in their own world." Which ADHD symptom domain does this BEST represent?', opts:['A) Hyperactivity-impulsivity','B) Inattention-disorganization','C) Oppositional defiance','D) Executive flexibility'], ans:'B', fb:'Inattention symptoms include: losing things, forgetting daily activities, difficulty sustaining attention, seeming not to listen, and being easily distracted. Hyperactivity-impulsivity would involve fidgeting, leaving seats, talking excessively, blurting. (Ch. 13, Mod 6)' },
+  { mod:'6', q:'Research on the heritability of ADHD from twin studies estimates h² to be approximately:', opts:['A) 20–30%','B) 40–50%','C) 60–70%','D) 70–80%'], ans:'D', fb:'Twin studies consistently estimate ADHD heritability at around 0.70–0.80 (some studies report up to 0.80). Family studies show 2–4× increased risk in first-degree relatives. (Ch. 13; slide 17, Mod 4/5)' },
+  { mod:'6', q:'Response suppression in the context of executive functioning refers to:', opts:['A) The ability to hold information in mind while performing a task','B) The ability to interrupt a prepotent response during moment-to-moment behavior','C) The ability to shift between different tasks or mental sets','D) The ability to detect signals during a sustained attention task'], ans:'B', fb:'Response suppression = executive inhibition = ability to interrupt a response in a rapidly changing context. Best measured by the stop-signal task. Right-lateralized neural circuit. Effect size d≈0.60 in ADHD. (Ch. 13)' },
+  { mod:'6', q:'Which of the following is NOT listed as a prenatal or perinatal risk factor for ADHD based on lecture material?', opts:['A) Low birth weight','B) Prenatal alcohol exposure','C) Vaccination history','D) Prenatal pesticide exposure'], ans:'C', fb:'Established prenatal/perinatal risk factors include: low birth weight, prenatal alcohol exposure, prenatal pesticide exposure, lead exposure, and maternal smoking. Vaccination is not a risk factor for ADHD. (Ch. 13)' },
+];
+
+const matchSets = [
+  {
+    title: 'DP Principles',
+    pairs: [
+      { term:'Risk factor', def:'Precedes and predicts maladaptive outcome; does not necessarily cause it' },
+      { term:'Resilience', def:'Good outcomes despite exposure to serious threat or adversity' },
+      { term:'Mediator', def:'Explains the "why" and "how" between a risk factor and an outcome' },
+      { term:'Equifinality', def:'Different paths leading to the same developmental outcome' },
+      { term:'Multifinality', def:'Same starting point leading to diverse developmental outcomes' },
+      { term:'Promotive factor', def:'Precedes and predicts adaptive outcomes; can offset risk' },
+    ]
+  },
+  {
+    title: 'Assessment',
+    pairs: [
+      { term:'Test reliability', def:'Consistency of scores across time, items, contexts, or raters' },
+      { term:'Test validity', def:'How accurately an instrument measures the intended construct' },
+      { term:'Comorbidity', def:'Simultaneous presence of two or more disorders in one individual' },
+      { term:'EBA', def:'Assessment methods grounded in empirical evidence for reliability, validity, and clinical usefulness' },
+      { term:'Structured interview', def:'Standardized protocol with uniform questions; responses scored — enhanced reliability' },
+      { term:'Informant discrepancy', def:'Common disagreement among reporters that reflects real contextual differences, not just measurement error' },
+    ]
+  },
+  {
+    title: 'Genetics',
+    pairs: [
+      { term:'Genotype', def:'Structural composition of an individual\'s specific genes' },
+      { term:'Phenotype', def:'Observable expression of the genotype, including behavior' },
+      { term:'Endophenotype', def:'Biological/behavioral markers of genetic vulnerability requiring careful measurement' },
+      { term:'h² (heritability)', def:'Proportion of variance in a trait attributable to genetic differences in a population' },
+      { term:'rGE', def:'Correlation between a child\'s genotype and the environment they are exposed to' },
+      { term:'G × E interaction', def:'Genotype moderates the effect of an environmental risk factor on a disorder' },
+    ]
+  },
+  {
+    title: 'ADHD',
+    pairs: [
+      { term:'Working memory', def:'Limited capacity system for holding something in mind while doing something else' },
+      { term:'Response suppression', def:'Ability to interrupt a prepotent response; right-lateralized; stop-signal task' },
+      { term:'Cognitive flexibility', def:'Shifting mental set between different rules or tasks; involves parietal cortex' },
+      { term:'Comorbidity in ADHD', def:'~50% co-occur with ODD; ~25% with learning disorders; ~22% with CD' },
+      { term:'Cross-situational', def:'Symptoms must appear across multiple settings — a key diagnostic requirement' },
+      { term:'Vigilance/sustained attention', def:'Maintaining alert state over time; right-lateralized; impaired in ADHD on CPTs' },
+    ]
+  }
+];
+
+const saData = [
+  { mod:'1', prompt:'Why is it important to study normal/typical development in a course on child psychopathology? How does the developmental psychopathology approach differ from prior approaches?', points:[
+    'DP Principle 1: typical and atypical development are mutually informative — understanding what is "normal" tells us what counts as a deviation',
+    'Prior approach: clinical psychology studied children with mental illness separately from academic psychology studying typical development',
+    'DP approach: includes both groups in same study; uses healthy controls as reference; uses rigorous/validated measures; cross-disciplinary collaboration',
+    'Example: Preschool depression EEG study — researchers used both depressed (N=53) and healthy (N=25) children and found blunted reward response in clinical group, extending findings across the lifespan'
+  ]},
+  { mod:'1', prompt:'Define developmental pathways and provide an example. What role do mediators play in understanding developmental pathways?', points:[
+    'Developmental pathway = sequence and timing of behaviors or risk/promotive factors and possible relationships between them over time',
+    'Explains "why" and "how" — not just what outcomes occur',
+    'Mediator = variable that explains the causal process; mediators establish causality',
+    'Example: Coercive parenting → low self-esteem or emotion dysregulation (mediator) → adolescent delinquency',
+    'Example: Parents\' ACEs → parents\' emotional distress (mediator) → children\'s behavioral problems',
+    'Mediators matter for intervention: targeting the mediator can break the causal chain'
+  ]},
+  { mod:'23', prompt:'What are the purposes of psychological assessment? Describe the multi-informant, multi-context, multi-method approach and discuss its benefits and limitations.', points:[
+    '4 purposes: (1) diagnosis, (2) prognosis, (3) case conceptualization/treatment planning, (4) treatment monitoring/outcome evaluation',
+    'Multi-informant: parents, teachers, child, peers — each observes child in different contexts; reporter biases exist; child self-report has limited validity depending on age',
+    'Multi-context: behaviors vary by setting; context provides clues about severity; developmental expectability varies by context',
+    'Multi-method: interviews, behavioral observation, rating scales, psychological testing',
+    'Benefits: more comprehensive picture; informant discrepancies are informative (not just noise)',
+    'Limitations: time and cost; discrepancies can be hard to reconcile; reporter biases'
+  ]},
+  { mod:'23', prompt:'Describe the difference between categorical and dimensional classification systems for mental disorders. What are three specific criticisms of the DSM-5 categorical system?', points:[
+    'Categorical (DSM-5): yes/no diagnosis based on meeting symptom threshold; ICD-11 also categorical',
+    'Dimensional (RDoC, HiTOP): treats mental health on continuous spectra; better for capturing severity gradations',
+    'Criticism 1: Categorical vs. dimensional — mental health likely exists on a continuum, not discrete categories',
+    'Criticism 2: Heterogeneity within diagnostic classes — two children with the same diagnosis can look very different',
+    'Criticism 3: Failure to consider development — same symptoms mean different things at different ages',
+    'Criticism 4: Failure to consider culture/context — "harm" is culturally dependent',
+    'Criticism 5: Over-specification — arbitrary thresholds for diagnosis'
+  ]},
+  { mod:'45', prompt:'Use examples to differentiate between gene-environment correlation (rGE) and a Gene × Environment (G×E) interaction. Why does distinguishing between these matter?', points:[
+    'rGE = the correlation between genotype and environment; the child\'s genes influence what environments they are exposed to',
+    'Example of rGE: children genetically predisposed to ADHD evoke more chaotic household environments (ADHD polygenic risk score predicts household chaos above and beyond mothers\' genetic risk)',
+    'G×E = genotype MODERATES the effect of an environmental risk factor; the same environment has different effects depending on genotype',
+    'Example of G×E: 5-HTTLPR gene moderates the association between maternal unresponsiveness and child externalizing problems — S allele is a protective factor',
+    'Distinction matters: rGE means environment and genes are confounded; G×E means you need both gene AND environment data to understand risk',
+    'Both require moving beyond purely behavioral genetics to molecular approaches'
+  ]},
+  { mod:'45', prompt:'Define Baumrind\'s four parenting styles using the two underlying dimensions. Summarize the main research findings on the associations between parenting styles and child outcomes.', points:[
+    'Two dimensions: (1) supportiveness (accepting/child-centered vs. rejecting/parent-centered) and (2) demandingness (high vs. low expectations)',
+    'Authoritative: high support + high demand → best outcomes; r = -.16 externalizing, -.14 internalizing, +.17 academic achievement',
+    'Authoritarian: low support + high demand → worse outcomes; r = +.16 externalizing, +.14 internalizing, -.09 academic',
+    'Permissive: high support + low demand → mixed; r = +.08 externalizing, ns internalizing, -.05 academic',
+    'Neglectful: low support + low demand → worst outcomes; r = +.19 externalizing, +.14 internalizing, -.15 academic',
+    'Based on meta-analytic reviews (Pinquart, 2016, 2017)'
+  ]},
+  { mod:'6', prompt:'What are the functional systems implicated in ADHD? Provide examples of attention and executive function challenges and their behavioral manifestations in an elementary school classroom.', points:[
+    'Four functional systems: (1) nonexecutive attention and arousal/vigilance, (2) executive functioning/cognitive control, (3) motivation and reinforcement, (4) temporal information processing',
+    'Executive functioning includes: working memory (verbal d≈.45, spatial d≈1.0), response suppression (d≈.60), set shifting/cognitive flexibility (d≈.46)',
+    'Vigilance/alerting: poor signal detection on CPTs; excess reaction time variability',
+    'Classroom behavioral manifestations of inattention: forgetting homework, losing pencils, not following multi-step instructions, appearing "in own world", difficulty completing tasks',
+    'Classroom manifestations of hyperactivity-impulsivity: leaving seat, blurting out answers, talking when should be quiet, difficulty waiting for turn',
+    'Fronto-striatal circuits and prefrontal cortex are the key neural systems implicated'
+  ]},
+  { mod:'6', prompt:'What are the guidelines for evidence-based assessment of ADHD? What do we know about genetic and environmental risks for ADHD?', points:[
+    'EBA for ADHD: multi-informant (parent + teacher standardized ratings); careful developmental history; rule out other explanations; direct observation when possible; assess impairment across multiple domains',
+    'Age of onset criterion: symptoms present before age 12; must be cross-situational; must cause impairment',
+    'Genetic risk: h² ≈ 0.70–0.80 from twin studies; 2–4× risk in first-degree relatives; highly polygenic; no single gene; 6 candidate genes account for only ~1% of variance',
+    'Prenatal risks: low birth weight, prenatal alcohol exposure, pesticide exposure, lead exposure (even at background levels)',
+    'G×E likely explains much unexplained heritable variance; epigenetic mechanisms also implicated',
+    'Sociological risks (school, family stress) are possible but poorly tested'
+  ]},
+];
+
+const essayPrompts = [
+  {
+    prompt: 'A child grows up in a high-conflict, low-income household with a parent who has a history of depression. Using the principles of developmental psychopathology, explain how you would understand this child\'s risk for developing psychopathology. Your answer should address: (1) risk and promotive factors, (2) the concept of resilience, (3) multiple levels of analysis, and (4) the role of developmental pathways.',
+    tips: [
+      'Define risk factors and give specific examples from this scenario (family conflict, poverty, parental depression)',
+      'Identify potential promotive/asset factors that could buffer risk (e.g., positive peer relationships, teacher support)',
+      'Explain resilience with both criteria — exposure to risk AND good outcomes',
+      'Apply multiple levels of analysis (biological/neural, psychological, family/contextual, neighborhood)',
+      'Describe a specific developmental pathway with a mediator (e.g., parental depression → parent emotional unavailability → child attachment insecurity → child depression)',
+      'Discuss equifinality and/or multifinality — different outcomes are possible',
+      'Mention the importance of age/developmental period in how risks manifest'
+    ],
+    rubric: [
+      {pts:'8', desc:'Accurate definitions of all four required concepts with concrete examples from scenario'},
+      {pts:'6', desc:'Applies at least one developmental pathway with a named mediator and explains why it matters for intervention'},
+      {pts:'4', desc:'Addresses multiple levels of analysis (not just one) with at least two distinct levels discussed'},
+      {pts:'4', desc:'Discusses resilience with BOTH criteria and explains relation to asset/promotive factors'},
+      {pts:'3', desc:'Connects concepts to each other coherently (e.g., promotive factors support resilience; mediators articulate pathways)'},
+      {pts:'5', desc:'Organization, clarity, and quality of writing'},
+    ]
+  },
+  {
+    prompt: 'Compare and contrast behavioral genetics and molecular genetics approaches to studying genetic influences on psychopathology. Using ADHD as your primary example, discuss what we know about genetic and environmental influences on the disorder and the limitations of current research.',
+    tips: [
+      'Explain h² and the twin study design (A, C, E model) — and its limitations',
+      'Contrast behavioral (estimates heritability, can\'t ID specific genes) vs. molecular genetics (identifies specific polymorphisms, GWAS)',
+      'ADHD h² ≈ 0.70–0.80; six candidate genes identified but account for only 1% of variance',
+      'Discuss rGE and G×E interaction with ADHD examples',
+      'Prenatal and perinatal environmental risk factors for ADHD',
+      'Limitations: h² applies to populations not individuals; environmental effects inferred not measured in behavioral genetics; small effects in molecular studies; G×E hard to disentangle'
+    ],
+    rubric: [
+      {pts:'6', desc:'Accurately explains behavioral genetics designs (twin, family, adoption) and what h² tells us and does NOT tell us'},
+      {pts:'6', desc:'Accurately contrasts molecular genetics approach — candidate gene vs. GWAS; specific ADHD examples'},
+      {pts:'5', desc:'Clearly distinguishes rGE vs G×E with ADHD-relevant examples for each'},
+      {pts:'5', desc:'Identifies at least 3 specific limitations of the behavioral or molecular genetics approach'},
+      {pts:'4', desc:'Incorporates environmental risk factors for ADHD with correct details'},
+      {pts:'4', desc:'Organization, accurate use of key terms, clarity'},
+    ]
+  },
+  {
+    prompt: 'You are a clinician conducting a psychological assessment of a 7-year-old child referred for possible ADHD. Describe your assessment approach, including: (1) why you use multiple informants and methods, (2) the specific tools you would use, (3) how you would evaluate the psychometric quality of your chosen measures, and (4) any diagnostic classification challenges you might face.',
+    tips: [
+      'Multi-informant rationale: parent, teacher, child (each sees different contexts; reporter biases exist; informant discrepancies are informative)',
+      'Specific tools: clinical interview (structured/semi-structured), behavioral rating scales (Conners 3, CBCL), cognitive/attention tests (WISC-V, Conners CPT), direct classroom observation',
+      'Psychometric quality: define and apply both reliability (test-retest, inter-rater) and validity (construct, predictive)',
+      'Comorbidity: ADHD commonly co-occurs with ODD, anxiety, learning disorders — differential diagnosis matters',
+      'DSM-5 categorical limitations: heterogeneity within ADHD, failure to consider developmental context, cross-situational requirement',
+      'Evidence-based assessment: selecting measures with empirical support for your population'
+    ],
+    rubric: [
+      {pts:'6', desc:'Clear rationale for multi-informant approach with benefits AND limitations of at least 2 informant types'},
+      {pts:'6', desc:'Names at least 4 specific, real assessment tools appropriate for a 7-year-old with possible ADHD'},
+      {pts:'5', desc:'Defines and applies both reliability and validity — includes example of poor reliability and poor validity'},
+      {pts:'5', desc:'Identifies at least 2 diagnostic/classification challenges (comorbidity, categorical vs. dimensional, development)'},
+      {pts:'4', desc:'Integrates EBA concept and explains why evidence base matters for instrument selection'},
+      {pts:'4', desc:'Coherence, organization, appropriate use of technical terminology'},
+    ]
+  }
+];
+
+const allTerms = [
+  // Mod 1
+  { mod:'1', term:'Risk factor', def:'Individual, family, or social characteristic that precedes and predicts a maladaptive outcome; does not necessarily cause it.' },
+  { mod:'1', term:'Promotive / Asset factor', def:'Precedes and predicts adaptive outcomes; can compensate for risk. Can exist on the same continuum as risk factors.' },
+  { mod:'1', term:'Resilience', def:'Good developmental outcomes despite serious threats to adaptation. Requires: (1) exposure to adversity AND (2) good outcomes.' },
+  { mod:'1', term:'Psychopathology', def:'The study of the nature and causes of mental disorders.' },
+  { mod:'1', term:'Mental disorder', def:'A clinically significant behavioral or psychological syndrome associated with distress, disability, or increased risk of harm (DSM). Requires dysfunction + harm (Wakefield).' },
+  // Mod 2/3
+  { mod:'23', term:'Evidence-based assessment (EBA)', def:'Assessment methods grounded in empirical evidence for reliability, validity, and clinical usefulness for specific populations.' },
+  { mod:'23', term:'Informant discrepancy', def:'Common disagreement among informants about youth mental health; not fully explained by measurement error; reflects real contextual differences.' },
+  { mod:'23', term:'Test reliability', def:'Consistency of test scores across time, items, context, or raters.' },
+  { mod:'23', term:'Test validity', def:'How accurately an instrument measures its intended construct and predicts important outcomes.' },
+  { mod:'23', term:'Comorbidity', def:'Simultaneous presence of two or more disorders in one individual.' },
+  // Mod 4/5
+  { mod:'45', term:'Genotype', def:'The structural composition of an individual\'s specific genes — the underlying blueprint, not directly observable.' },
+  { mod:'45', term:'Alleles', def:'Two or more forms of a gene for a specific trait (e.g., long vs. short alleles of 5-HTT gene).' },
+  { mod:'45', term:'Polymorphism', def:'Two or more variant forms of a specific DNA sequence occurring among different individuals or populations.' },
+  { mod:'45', term:'Phenotype', def:'The observable expression of the genotype, including body characteristics and behavior.' },
+  { mod:'45', term:'Multifinality', def:'Similar early experiences or risk factors lead to different outcomes.' },
+  { mod:'45', term:'Equifinality', def:'Different early experiences or risk factors lead to the same outcome.' },
+  { mod:'45', term:'Endophenotype', def:'Biological and behavioral markers of genetic vulnerability requiring careful measurement to detect; sits between genotype and phenotype.' },
+  { mod:'45', term:'Heritability estimate (h²)', def:'Statistical estimate of proportion of variance in a trait attributable to genetic differences in a population. Not applicable to individuals.' },
+  { mod:'45', term:'Gene-environment correlation (rGE)', def:'The correlation between a child\'s genotype and the environment they are exposed to.' },
+  { mod:'45', term:'Gene × Environment interaction (GxE)', def:'Genotype moderates the effect of an environmental risk factor on a disorder.' },
+  { mod:'45', term:'Authoritative parenting', def:'High support + high demandingness; reciprocal, responsive, bidirectional communication. Best child outcomes.' },
+  { mod:'45', term:'Authoritarian parenting', def:'Low support + high demandingness; controlling, power-assertive, unidirectional. Higher behavior problems.' },
+  { mod:'45', term:'Permissive parenting', def:'High support + low demandingness; indulgent, low control. Mixed outcomes.' },
+  { mod:'45', term:'Disengaged parenting', def:'Low support + low demandingness; rejecting, neglecting, uninvolved. Worst outcomes.' },
+  { mod:'45', term:'Emotion-related parenting practices (ERPPs)', def:'Parenting behaviors that shape a child\'s experience, expression, and regulation of emotions. Types: own expressions, discussion of emotions, reactions to child\'s emotions.' },
+  // Mod 6
+  { mod:'6', term:'Comorbidity (ADHD)', def:'~50% co-occur with ODD, ~25% with learning disorders, ~22% with CD. Over 2/3 have at least one additional diagnosis.' },
+  { mod:'6', term:'Executive functioning', def:'Strategic, deliberate allocation of attention and response. Includes working memory, response suppression, and cognitive flexibility.' },
+  { mod:'6', term:'Working memory', def:'Limited capacity system for holding something in mind while doing something else. Verbal and spatial components. Large deficits in ADHD (spatial d≈1.0).' },
+  { mod:'6', term:'Response suppression', def:'Ability to interrupt a prepotent response (inhibition). Right-lateralized; stop-signal task; d≈0.60 in ADHD.' },
+  { mod:'6', term:'Cognitive flexibility', def:'Shifting mental focus across rules or tasks; involves parietal cortex. Smaller deficits in ADHD (d≈0.46).' },
+];
+
+// ===================== STATE =====================
+let fcCards = [...flashcards];
+let fcIndex = 0;
+let fcFilter = 'all';
+let fcGot = new Set();
+let fcMissed = new Set();
+let fcFlipped = false;
+
+let mcScoreCorrect = 0;
+let mcTotal = 0;
+let mcFilter = 'all';
+
+let matchState = { selected: null, matched: new Set(), setIndex: 0, score: 0 };
+
+let saFilter = 'all';
+let saRevealed = new Set();
+
+// ===================== SECTION NAV =====================
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('nav button').forEach((b,i) => {
+    b.classList.remove('active');
+  });
+  const btns = document.querySelectorAll('nav button');
+  const map = {flashcards:0,mc:1,matching:2,sa:3,essay:4,terms:5};
+  btns[map[id]].classList.add('active');
+}
+
+// ===================== FLASHCARDS =====================
+function getFilteredCards() {
+  if (fcFilter === 'all') return fcCards;
+  return fcCards.filter(c => c.mod === fcFilter);
+}
+
+function renderCard() {
+  const cards = getFilteredCards();
+  if (!cards.length) return;
+  const card = cards[fcIndex % cards.length];
+  document.getElementById('fc-term').textContent = card.term;
+  document.getElementById('fc-def').textContent = card.def;
+  document.getElementById('fc-inner').classList.remove('flipped');
+  fcFlipped = false;
+  document.getElementById('fc-counter').textContent = `Card ${(fcIndex % cards.length) + 1} of ${cards.length}`;
+  const prog = ((fcIndex % cards.length) + 1) / cards.length * 100;
+  document.getElementById('fc-progress').style.width = prog + '%';
+  updateFCScore();
+}
+
+function updateFCScore() {
+  const cards = getFilteredCards();
+  let got = 0, missed = 0;
+  cards.forEach((c,i) => { if(fcGot.has(c.term)) got++; if(fcMissed.has(c.term)) missed++; });
+  document.getElementById('fc-got').textContent = `✓ Got it: ${got}`;
+  document.getElementById('fc-missed').textContent = `✗ Missed: ${missed}`;
+  document.getElementById('fc-remain').textContent = `◈ Remaining: ${cards.length - got - missed}`;
+}
+
+function flipCard() {
+  fcFlipped = !fcFlipped;
+  document.getElementById('fc-inner').classList.toggle('flipped', fcFlipped);
+}
+
+function nextCard() {
+  const cards = getFilteredCards();
+  fcIndex = (fcIndex + 1) % cards.length;
+  renderCard();
+}
+
+function prevCard() {
+  const cards = getFilteredCards();
+  fcIndex = (fcIndex - 1 + cards.length) % cards.length;
+  renderCard();
+}
+
+function markCard(type) {
+  const cards = getFilteredCards();
+  const card = cards[fcIndex % cards.length];
+  if (type === 'got') { fcGot.add(card.term); fcMissed.delete(card.term); }
+  else { fcMissed.add(card.term); fcGot.delete(card.term); }
+  updateFCScore();
+  nextCard();
+}
+
+function shuffleCards() {
+  for (let i = fcCards.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [fcCards[i], fcCards[j]] = [fcCards[j], fcCards[i]];
+  }
+  fcIndex = 0;
+  renderCard();
+}
+
+function resetCards() {
+  fcGot.clear(); fcMissed.clear(); fcIndex = 0;
+  fcCards = [...flashcards];
+  renderCard();
+}
+
+function reviewMissed() {
+  const missed = fcCards.filter(c => fcMissed.has(c.term));
+  if (!missed.length) { alert('No missed cards yet!'); return; }
+  fcCards = missed;
+  fcIndex = 0;
+  renderCard();
+}
+
+function filterCards(mod) {
+  fcFilter = mod;
+  fcIndex = 0;
+  document.querySelectorAll('#flashcards .module-tab').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderCard();
+}
+
+// ===================== MULTIPLE CHOICE =====================
+function renderMC() {
+  const container = document.getElementById('mc-container');
+  container.innerHTML = '';
+  const data = mcFilter === 'all' ? mcData : mcData.filter(q => q.mod === mcFilter);
+  mcTotal = data.length;
+  mcScoreCorrect = 0;
+  updateMCScore();
+
+  data.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'mc-question';
+    div.id = `mc-q-${qi}`;
+    div.dataset.mod = q.mod;
+
+    const opts = q.opts.map((o, oi) => {
+      const letter = o[0];
+      const text = o.slice(3);
+      return `<div class="mc-option" onclick="checkMC(${qi},'${letter}','${q.ans}',this)" data-letter="${letter}">
+        <span class="option-letter">${letter}</span><span>${text}</span>
+      </div>`;
+    }).join('');
+
+    div.innerHTML = `
+      <div class="q-number">Q${qi+1} · Module ${q.mod}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="mc-options">${opts}</div>
+      <div class="mc-feedback" id="mc-fb-${qi}"></div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function checkMC(qi, chosen, correct, el) {
+  const q = document.getElementById(`mc-q-${qi}`);
+  if (q.classList.contains('answered-correct') || q.classList.contains('answered-wrong')) return;
+
+  q.querySelectorAll('.mc-option').forEach(opt => {
+    opt.classList.add('disabled');
+    if (opt.dataset.letter === correct) opt.classList.add('correct');
+  });
+
+  const fb = document.getElementById(`mc-fb-${qi}`);
+  const data = mcFilter === 'all' ? mcData : mcData.filter(q2 => q2.mod === mcFilter);
+
+  if (chosen === correct) {
+    el.classList.add('correct');
+    q.classList.add('answered-correct');
+    fb.className = 'mc-feedback correct show';
+    fb.textContent = '✓ Correct! ' + data[qi].fb;
+    mcScoreCorrect++;
+  } else {
+    el.classList.add('wrong');
+    q.classList.add('answered-wrong');
+    fb.className = 'mc-feedback wrong show';
+    fb.textContent = `✗ The correct answer is ${correct}. ${data[qi].fb}`;
+  }
+  updateMCScore();
+}
+
+function updateMCScore() {
+  document.getElementById('mc-score').textContent = `${mcScoreCorrect} / ${mcTotal}`;
+}
+
+function resetMC() { renderMC(); }
+
+function filterMC(mod) {
+  mcFilter = mod;
+  document.querySelectorAll('#mc .module-tab').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderMC();
+}
+
+// ===================== MATCHING =====================
+function loadMatchSet(idx) {
+  document.querySelectorAll('#matching .module-tab').forEach((b,i) => b.classList.toggle('active', i===idx));
+  const set = matchSets[idx];
+  matchState = { selected: null, selectedType: null, matched: new Set(), setIndex: idx, score: 0 };
+
+  const terms = [...set.pairs.map(p => p.term)];
+  const defs = [...set.pairs.map(p => p.def)];
+
+  // Shuffle defs
+  for (let i = defs.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [defs[i], defs[j]] = [defs[j], defs[i]];
+  }
+
+  const termsEl = document.getElementById('match-terms');
+  const defsEl = document.getElementById('match-defs');
+
+  termsEl.innerHTML = terms.map((t, i) => `
+    <div class="match-item" id="mt-${i}" onclick="selectMatch('term', ${i}, '${CSS.escape(t)}')" data-value="${t}">
+      <span class="match-number">${i+1}.</span> ${t}
+    </div>
+  `).join('');
+
+  defsEl.innerHTML = defs.map((d, i) => `
+    <div class="match-item" id="md-${i}" onclick="selectMatch('def', ${i}, '${CSS.escape(d)}')" data-value="${d}">
+      ${d}
+    </div>
+  `).join('');
+
+  document.getElementById('match-score').textContent = `0 / ${set.pairs.length}`;
+}
+
+function selectMatch(type, idx, val) {
+  const el = document.getElementById(type === 'term' ? `mt-${idx}` : `md-${idx}`);
+  if (el.classList.contains('matched')) return;
+
+  if (!matchState.selected) {
+    // First selection
+    if (matchState.prevEl) matchState.prevEl.classList.remove('selected');
+    el.classList.add('selected');
+    matchState.selected = { type, idx, val: el.dataset.value };
+    matchState.selectedEl = el;
+  } else {
+    // Second selection
+    const prev = matchState.selected;
+    if (prev.type === type) {
+      // Same column — switch selection
+      matchState.selectedEl.classList.remove('selected');
+      el.classList.add('selected');
+      matchState.selected = { type, idx, val: el.dataset.value };
+      matchState.selectedEl = el;
+      return;
+    }
+
+    // Different columns — check match
+    const set = matchSets[matchState.setIndex];
+    const termVal = type === 'term' ? el.dataset.value : prev.val;
+    const defVal = type === 'def' ? el.dataset.value : prev.val;
+    const termEl = type === 'term' ? el : matchState.selectedEl;
+    const defEl = type === 'def' ? el : matchState.selectedEl;
+
+    const pair = set.pairs.find(p => p.term === termVal && p.def === defVal);
+
+    matchState.selectedEl.classList.remove('selected');
+    el.classList.remove('selected');
+
+    if (pair) {
+      termEl.classList.add('matched');
+      defEl.classList.add('matched');
+      matchState.score++;
+      document.getElementById('match-score').textContent = `${matchState.score} / ${set.pairs.length}`;
+    } else {
+      termEl.classList.add('wrong-match');
+      defEl.classList.add('wrong-match');
+      setTimeout(() => {
+        termEl.classList.remove('wrong-match');
+        defEl.classList.remove('wrong-match');
+      }, 800);
+    }
+    matchState.selected = null;
+    matchState.selectedEl = null;
+  }
+}
+
+function resetMatch() {
+  loadMatchSet(matchState.setIndex);
+}
+
+// ===================== SHORT ANSWER =====================
+function renderSA() {
+  const container = document.getElementById('sa-container');
+  container.innerHTML = '';
+  const data = saFilter === 'all' ? saData : saData.filter(q => q.mod === saFilter);
+
+  data.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'sa-question';
+    div.dataset.mod = q.mod;
+
+    const uid = `sa-${qi}`;
+    div.innerHTML = `
+      <div class="q-number">Q${qi+1} · Module ${q.mod}</div>
+      <div class="sa-prompt">${q.prompt}</div>
+      <textarea class="sa-textarea" id="${uid}-ta" placeholder="Write your answer here..." oninput="updateWordCount('${uid}')"></textarea>
+      <div class="word-count" id="${uid}-wc">0 words</div>
+      <div style="margin-top:12px">
+        <button class="btn" onclick="toggleSAReveal('${uid}')">Reveal Key Points</button>
+      </div>
+      <div class="sa-reveal" id="${uid}-reveal">
+        <strong>Key Points to Cover:</strong>
+        <ul>${q.points.map(p => `<li>${p}</li>`).join('')}</ul>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function updateWordCount(uid) {
+  const ta = document.getElementById(`${uid}-ta`);
+  const words = ta.value.trim().split(/\s+/).filter(w => w).length;
+  document.getElementById(`${uid}-wc`).textContent = `${words} words`;
+}
+
+function toggleSAReveal(uid) {
+  const el = document.getElementById(`${uid}-reveal`);
+  el.classList.toggle('show');
+}
+
+function filterSA(mod) {
+  saFilter = mod;
+  document.querySelectorAll('#sa .module-tab').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderSA();
+}
+
+// ===================== ESSAY =====================
+function renderEssay() {
+  const container = document.getElementById('essay-container');
+  container.innerHTML = '';
+  essayPrompts.forEach((e, ei) => {
+    const uid = `essay-${ei}`;
+    const tipsHTML = e.tips.map(t => `<li>${t}</li>`).join('');
+    const rubricHTML = e.rubric.map(r => `<div class="rubric-item"><span class="rubric-pts">${r.pts}pts</span><span>${r.desc}</span></div>`).join('');
+    const div = document.createElement('div');
+    div.className = 'essay-section';
+    div.innerHTML = `
+      <div class="essay-prompt-label">Essay Prompt ${ei+1} of ${essayPrompts.length}</div>
+      <div class="essay-prompt">${e.prompt}</div>
+      <div class="essay-tips">
+        <h4>Things to Cover</h4>
+        <ul>${tipsHTML}</ul>
+      </div>
+      <textarea class="essay-textarea" id="${uid}-ta" placeholder="Write your essay response here (~30 min on exam)..." oninput="updateEssayWC('${uid}')"></textarea>
+      <div class="word-count" id="${uid}-wc">0 words · aim for ~300–400 words on exam</div>
+      <div style="margin-top:12px">
+        <button class="btn" onclick="toggleRubric('${uid}')">Show Rubric</button>
+      </div>
+      <div class="rubric" id="${uid}-rubric">
+        <div class="rubric-header">Scoring Rubric (30 pts total)</div>
+        ${rubricHTML}
+      </div>
+    `;
+    container.appendChild(div);
+    if (ei < essayPrompts.length - 1) {
+      const hr = document.createElement('hr');
+      hr.className = 'divider';
+      container.appendChild(hr);
+    }
+  });
+}
+
+function updateEssayWC(uid) {
+  const ta = document.getElementById(`${uid}-ta`);
+  const words = ta.value.trim().split(/\s+/).filter(w => w).length;
+  document.getElementById(`${uid}-wc`).textContent = `${words} words · aim for ~300–400 words on exam`;
+}
+
+function toggleRubric(uid) {
+  document.getElementById(`${uid}-rubric`).classList.toggle('show');
+}
+
+// ===================== TERMS =====================
+function renderTerms() {
+  const grid = document.getElementById('terms-grid');
+  grid.innerHTML = '';
+  const filter = document.querySelector('#terms .module-tab.active')?.textContent || 'All';
+  const data = filter === 'All' || !filter ? allTerms : allTerms.filter(t => {
+    if (filter.includes('1') && !filter.includes('2') && !filter.includes('4') && !filter.includes('6')) return t.mod === '1';
+    if (filter.includes('2')) return t.mod === '23';
+    if (filter.includes('4')) return t.mod === '45';
+    if (filter.includes('6')) return t.mod === '6';
+    return true;
+  });
+
+  data.forEach((t, i) => {
+    const div = document.createElement('div');
+    div.className = 'term-card';
+    div.dataset.mod = t.mod;
+    div.innerHTML = `
+      <div class="term-name">${t.term}</div>
+      <div class="term-module">Module ${t.mod}</div>
+      <div class="term-def">${t.def}</div>
+    `;
+    div.onclick = () => div.classList.toggle('expanded');
+    grid.appendChild(div);
+  });
+}
+
+function filterTerms(mod) {
+  document.querySelectorAll('#terms .module-tab').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  const grid = document.getElementById('terms-grid');
+  const cards = grid.querySelectorAll('.term-card');
+  cards.forEach(c => {
+    if (mod === 'all' || c.dataset.mod === mod) c.style.display = 'block';
+    else c.style.display = 'none';
+  });
+}
+
+// ===================== INIT =====================
+document.addEventListener('DOMContentLoaded', () => {
+  renderCard();
+  renderMC();
+  loadMatchSet(0);
+  renderSA();
+  renderEssay();
+  renderTerms();
+});
+</script>
+</body>
+</html>

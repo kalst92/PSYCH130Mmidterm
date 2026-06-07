@@ -1459,10 +1459,10 @@ function toggleSAReveal(uid) {
   el.classList.toggle('show');
 }
 
-function filterSA(mod) {
+function filterSA(mod, btn) {
   saFilter = mod;
   document.querySelectorAll('#sa .module-tab').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  btn.classList.add('active');
   renderSA();
 }
 
